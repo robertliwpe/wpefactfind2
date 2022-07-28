@@ -87,10 +87,26 @@ for i in $installs;
                 cd /nas/content/live/$i 
                 printf "\r\n"; 
                 installcount=$(( $installcount + 1 ));
-                echo "INSTALL: $(echo $PWD | cut -d'/' -f4-)"; installdisk=$(( $installdisk + $(du -s -m $PWD | cut -d'/' -f1 | bc) )); disksize=$(du -hs $PWD | cut -d'/' -f1); 
-                echo "Size of Filesystem: " $disksize; 
-                echo "Size of Database: " $(dbsummary | grep "Total database size:" | cut -d':' -f4); 
-                dbsize=$(dbsummary | grep "Total database size:" | cut -d':' -f4 | cut -d' ' -f2 | sed 's/\x1B[@A-Z\\\]^_]\|\x1B\[[0-9:;<=>?]*[-!"#$%&'"'"'()*+,.\/]*[][\\@A-Z^_`a-z{|}~]//g' | bc);
+                echo "INSTALL: $(echo $PWD | cut -d'/' -f4-)"; 
+                disksize=$(du -s -m $PWD | cut -d'/' -f1 | bc); 
+                installdisk=$(( $installdisk + $disksize )); 
+
+                # Declare Disk Size per Install var
+                if (( $(echo "$disksize > 1000000" | bc -l) ))
+                    then
+                        diskprintin=$(echo $disksize / 1000 | bc);
+                        diskprintout=$(echo $diskprintin "TB");
+                    elif (( $(echo "$disksize > 10000" | bc -l) ))
+                        then
+                        diskprintin=$(echo $disksize / 1000 | bc);
+                        diskprintout=$(echo $diskprintin "GB");
+                    else
+                        diskprintout=$(echo $disksize "MB");
+                fi;
+
+                echo "Size of Filesystem: " $diskprintout; 
+                echo "Size of Database: " $(wp db size --size_format=MB --decimals=2) "MB"; 
+                dbsize=$(wp db size --size_format=MB --decimals=2 | bc);
                 dbtotal=$(echo $dbtotal + $dbsize | bc);
                 errorcount=$(zcat -f /var/log/nginx/$i.access.log* | grep "|50[0-9]|" | wc -l); 
                 echo "50x Errors in All Logs: " $errorcount; errortotal=$(( $errortotal + $errorcount )); 
