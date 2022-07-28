@@ -16,10 +16,14 @@ There are 2 versions:
 
 To invoke, `gogo` or `ssh` into your chosen pod/EVLV cluster, paste the following command into your terminal and press enter:
 
-`source <(wget -nv -O - https://raw.githubusercontent.com/robertliwpe/wpefactfind2/main/factfind2.sh)`
+```
+source <(wget -nv -O - https://raw.githubusercontent.com/robertliwpe/wpefactfind2/main/factfind2.sh)
+```
 
 ### Combination Server & Install Factfind (Currently BETA)
 
 To invoke, `gogo` or `ssh` into your chosen pod/EVLV cluster, paste the following command into your terminal and press enter:
 
-`source <(wget -nv -O - https://raw.githubusercontent.com/robertliwpe/wpefactfind2/main/factfind2-complete.sh)`
+```
+source <(wget -nv -O - https://raw.githubusercontent.com/robertliwpe/wpefactfind2/main/factfind2-complete.sh)
+```
