@@ -12,14 +12,14 @@ This will only work for WP Engine pods and clusters, and will require Redshell a
 
 There are 2 versions:
 
-### Install Only Factfind: https://gist.github.com/robertliwpe/fb055c87790ef74818f22d30acf0d9fa
+### Install Only Factfind
 
 To invoke, `gogo` or `ssh` into your chosen pod/EVLV cluster, paste the following command into your terminal and press enter:
 
-`source <(wget -nv -O - https://gist.githubusercontent.com/robertliwpe/fb055c87790ef74818f22d30acf0d9fa/raw/d3fb8d46c3566266147af16c344d96a4d26b6908/factfind2.sh)`
+`source <(wget -nv -O - https://raw.githubusercontent.com/robertliwpe/wpefactfind2/main/factfind2.sh)`
 
-### Combination Server & Install Factfind (Currently BETA): https://gist.github.com/robertliwpe/e3d351e7423ba667e940f41193029f5f
+### Combination Server & Install Factfind (Currently BETA)
 
 To invoke, `gogo` or `ssh` into your chosen pod/EVLV cluster, paste the following command into your terminal and press enter:
 
-`source <(wget -nv -O - https://gist.githubusercontent.com/robertliwpe/e3d351e7423ba667e940f41193029f5f/raw/e4814f6fa25f1fcaa0c364a01a04f3d310f6d8be/factfind2-complete.sh)`
+`source <(wget -nv -O - https://raw.githubusercontent.com/robertliwpe/wpefactfind2/main/factfind2-complete.sh)`
