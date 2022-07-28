@@ -41,21 +41,43 @@ fi;
 # Begin Function
 printf "\r\nFACTFIND for $dediout pod-$cid\r\nThere are $count Installs on this pod\r\nAvailability Zone:$az\r\nMachine Type:$machine\r\nPlan:$plan\r\nPlatform Type: $evlvclassic\r\n\r\n=============================\r\n"; 
 
+# Per Install Factfind
 for i in $installs; 
     do installloc="/nas/content/live/$i"; 
         if [ -d $installloc ]; 
             then 
                 cd /nas/content/live/$i 
                 printf "\r\n"; 
-                echo "INSTALL: $(echo $PWD | cut -d'/' -f4-)"; installdisk=$(( $installdisk + $(du -s -m $PWD | cut -d'/' -f1 | bc) )); disksize=$(du -hs $PWD | cut -d'/' -f1); 
-                echo "Size of Filesystem: " $disksize; 
-                echo "Size of Database: " $(dbsummary | grep "Total database size:" | cut -d':' -f4); 
-                dbsize=$(dbsummary | grep "Total database size:" | cut -d':' -f4 | cut -d' ' -f2 | sed 's/\x1B[@A-Z\\\]^_]\|\x1B\[[0-9:;<=>?]*[-!"#$%&'"'"'()*+,.\/]*[][\\@A-Z^_`a-z{|}~]//g' | bc);
+                installcount=$(( $installcount + 1 ));
+                echo "INSTALL: $(echo $PWD | cut -d'/' -f4-)"; 
+                disksize=$(du -s -m $PWD | cut -d'/' -f1 | bc); 
+                installdisk=$(( $installdisk + $disksize )); 
+
+                # Declare Disk Size per Install var
+                if (( $(echo "$disksize > 1000000" | bc -l) ))
+                    then
+                        diskprintin=$(echo $disksize / 1000 | bc);
+                        diskprintout=$(echo $diskprintin "TB");
+                    elif (( $(echo "$disksize > 10000" | bc -l) ))
+                        then
+                        diskprintin=$(echo $disksize / 1000 | bc);
+                        diskprintout=$(echo $diskprintin "GB");
+                    else
+                        diskprintout=$(echo $disksize "MB");
+                fi;
+
+                echo "Size of Filesystem: " $diskprintout; 
+                dbsize=$(wp db size --size_format=MB --decimals=2 | bc);
+                echo "Size of Database: " $dbsize "MB"; 
                 dbtotal=$(echo $dbtotal + $dbsize | bc);
                 errorcount=$(zcat -f /var/log/nginx/$i.access.log* | grep "|50[0-9]|" | wc -l); 
                 echo "50x Errors in All Logs: " $errorcount; errortotal=$(( $errortotal + $errorcount )); 
-                static=$(zcat -f /var/log/nginx/$i.access.log* | wc -l); dyn=$(zcat -f /var/log/apache2/$i.access.log* | wc -l); comp=$(awk -v staticin=$static -v dynin=$dyn 'BEGIN { print staticin - dynin }');   cacheresult=$(awk -v compin=$comp -v staticincache=$static 'BEGIN { print (compin / staticincache)*100 }' | sed 's/^-.*/0/'); echo "Cacheability (%): " $cacheresult;
-                echo "PHP-FPM Use: " $(awk "BEGIN {print ($dyn/$all)*100}" && echo "% ($dyn / $all hits)"); 
+                static=$(zcat -f /var/log/nginx/$i.apachestyle.log* | grep -v "jpg\|jpeg\|png\|svg\|gif\|webp\|woff\|woff2\|ttf\|otf\|xml\|css\|ico\|\.js\|txt\|pdf\|mov\|mp4\|mp3\|aiff\|mpg\|mpeg\|ogg" | wc -l | bc); 
+                dyn=$(zcat -f /var/log/apache2/$i.access.log* | wc -l | bc); 
+                comp=$(awk -v staticin=$static -v dynin=$dyn 'BEGIN { print staticin - dynin }' | bc);   
+                cacheresult=$(awk -v compin=$comp -v staticincache=$static 'BEGIN { print (compin / staticincache)*100 }' | sed 's/^-.*/0/'); 
+                echo "Cacheability (%): " $cacheresult;
+                echo "PHP-FPM / Apache Use: " $(awk "BEGIN {print ($dyn/$all)*100}" && echo "% ($dyn / $all hits)"); 
                 echo "Average Daily CPU Runtime Use 7-days (BSPH): " $(instbsph=$(zcat -f /var/log/nginx/$i.access.log.* | awk -F '|' '{sum += $9} END {print substr((sum/7)/3600,0,6)}'); 
                 echo $instbsph \/ $totbsph Total); 
             else 
