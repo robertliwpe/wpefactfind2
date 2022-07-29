@@ -69,7 +69,7 @@ for i in $installs;
                 fi;
 
                 echo "Size of Filesystem: " $diskprintout; 
-                dbsize=$(echo $(wp db size --size_format=MiB --decimals=2 --skip-themes --skip-plugins --quiet) | tr -d $'\r' | bc );
+                dbsize=$(echo $(wp db size --size_format=MiB --decimals=2 --skip-themes --skip-plugins --quiet) | tr -d '\r' | bc );
                 echo "Size of Database: " $dbsize "MB"; 
                 dbtotal=$(echo $dbtotal + $dbsize | bc);
                 errorcount=$(zcat -f /var/log/nginx/$i.access.log* | grep "|50[0-9]|" | wc -l); 
@@ -87,7 +87,7 @@ for i in $installs;
                     else
                         cacheresult=$(echo $cacheresult | bc);
                 fi;
-                
+
                 echo "Cacheability (%): " $cacheresult;
                 echo "PHP-FPM / Apache Use: " $(awk "BEGIN {print ($dyn/$all)*100}" && echo "% ($dyn / $all hits)"); 
                 echo "Average Daily CPU Runtime Use 7-days (BSPH): " $(instbsph=$(zcat -f /var/log/nginx/$i.access.log.* | awk -F '|' '{sum += $9} END {print substr((sum/7)/3600,0,6)}'); 
