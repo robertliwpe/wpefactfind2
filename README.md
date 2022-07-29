@@ -8,7 +8,7 @@ Currently how it works is via `wget` command, which pulls a shell script from Gi
 
 Simply input the names of the Installs concerned (they MUST be on the specific pod or EVLV cluster you are currently SSH'd into).
 
-This will only work for WP Engine pods and clusters, and will require Redshell access (it uses some Redshell commands). This is NOT customer facing and will not work via SSH Gateway.
+***This will only work for WP Engine pods and clusters, and will require Redshell access (it uses some Redshell commands). This is NOT customer facing and will not work via SSH Gateway.***
 
 There are 2 versions:
 
