@@ -7,7 +7,7 @@ printf "\r\n"
 echo "NOTE: This will ONLY work with WP Engine Production Pods and Servers."
 echo "This may also take a long time on very large filesystems and databases."
 echo "Also note that Cacheability scores of 0% or 100+% are likely inaccurate caused by non-use or atypical use of the install."
-echo "Finally, if you see $ -bash: dev: Permission denied with any of the results, simply cancel the script and rerun it."
+echo "Finally, if you see \"$ - bash: dev: Permission denied\" with any of the results, simply cancel the script and rerun it."
 echo "Enter Install Names using Space as a Separator:"
 
 read installsinit
@@ -120,10 +120,10 @@ for i in $installs;
                 echo "Size of Filesystem: " $diskprintout; 
                 dbsize=$(dbsummary | grep "Total database size:" | cut -d':' -f4 | cut -d' ' -f2 | sed 's/\x1B[@A-Z\\\]^_]\|\x1B\[[0-9:;<=>?]*[-!"#$%&'"'"'()*+,.\/]*[][\\@A-Z^_`a-z{|}~]//g' | bc);
                 echo "Size of Database: " $dbsize "MB"; 
-                dbtotal=$(echo $dbtotal + $dbsize |  tr -d '\r' | bc);
+                dbtotal=$(echo $dbtotal + $dbsize | bc);
                 errorcount=$(zcat -f /var/log/nginx/$i.access.log* | grep "|50[0-9]|" | wc -l | bc); 
                 echo "50x Errors in All Logs: " $errorcount; 
-                errortotal=$(( $errortotal + $errorcount )); 
+                errortotal=$(echo $errortotal + $errorcount | bc); 
                 static=$(zcat -f /var/log/nginx/$i.apachestyle.log* | grep -v "jpg\|jpeg\|png\|svg\|gif\|webp\|woff\|woff2\|ttf\|otf\|xml\|css\|ico\|\.js\|txt\|pdf\|mov\|mp4\|mp3\|aiff\|mpg\|mpeg\|ogg" | wc -l | bc); 
                 dyn=$(zcat -f /var/log/apache2/$i.access.log* | wc -l | bc); 
                 comp=$(awk -v staticin=$static -v dynin=$dyn 'BEGIN { print staticin - dynin }' | bc);   
