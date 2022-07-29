@@ -118,9 +118,9 @@ for i in $installs;
                 fi;
 
                 echo "Size of Filesystem: " $diskprintout; 
-                dbsize=$(wp db size --size_format=MiB --decimals=2 --skip-themes --skip-plugins --skip-packages --quiet | tr -d '\r' | bc );
+                dbsize=$(dbsummary | grep "Total database size:" | cut -d':' -f4 | cut -d' ' -f2 | sed 's/\x1B[@A-Z\\\]^_]\|\x1B\[[0-9:;<=>?]*[-!"#$%&'"'"'()*+,.\/]*[][\\@A-Z^_`a-z{|}~]//g' | bc);
                 echo "Size of Database: " $dbsize "MB"; 
-                dbtotal=$(echo $dbtotal + $dbsize |  tr -d '\r' | bc);
+                dbtotal=$(( $dbtotal + $dbsize ));
                 errorcount=$(zcat -f /var/log/nginx/$i.access.log* | grep "|50[0-9]|" | wc -l | bc); 
                 echo "50x Errors in All Logs: " $errorcount; 
                 errortotal=$(( $errortotal + $errorcount )); 
