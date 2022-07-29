@@ -107,11 +107,11 @@ for i in $installs;
                 # Declare Disk Size per Install var
                 if (( $(echo "$disksize > 1000000" | bc -l) ))
                     then
-                        diskprintin=$(echo $disksize / 1000 | bc);
+                        diskprintin=$(echo $disksize / 1000 | tr -d '\r' | bc);
                         diskprintout=$(echo $diskprintin "TB");
                     elif (( $(echo "$disksize > 10000" | bc -l) ))
                         then
-                        diskprintin=$(echo $disksize / 1000 | bc);
+                        diskprintin=$(echo $disksize / 1000 | tr -d '\r' | bc);
                         diskprintout=$(echo $diskprintin "GB");
                     else
                         diskprintout=$(echo $disksize "MB");
@@ -120,9 +120,10 @@ for i in $installs;
                 echo "Size of Filesystem: " $diskprintout; 
                 dbsize=$(wp db size --size_format=MiB --decimals=2 --skip-themes --skip-plugins --skip-packages --quiet | tr -d '\r' | bc );
                 echo "Size of Database: " $dbsize "MB"; 
-                dbtotal=$(echo $dbtotal + $dbsize | bc);
-                errorcount=$(zcat -f /var/log/nginx/$i.access.log* | grep "|50[0-9]|" | wc -l); 
-                echo "50x Errors in All Logs: " $errorcount; errortotal=$(( $errortotal + $errorcount )); 
+                dbtotal=$(echo $dbtotal + $dbsize |  tr -d '\r' | bc);
+                errorcount=$(zcat -f /var/log/nginx/$i.access.log* | grep "|50[0-9]|" | wc -l | bc); 
+                echo "50x Errors in All Logs: " $errorcount; 
+                errortotal=$(( $errortotal + $errorcount )); 
                 static=$(zcat -f /var/log/nginx/$i.apachestyle.log* | grep -v "jpg\|jpeg\|png\|svg\|gif\|webp\|woff\|woff2\|ttf\|otf\|xml\|css\|ico\|\.js\|txt\|pdf\|mov\|mp4\|mp3\|aiff\|mpg\|mpeg\|ogg" | wc -l | bc); 
                 dyn=$(zcat -f /var/log/apache2/$i.access.log* | wc -l | bc); 
                 comp=$(awk -v staticin=$static -v dynin=$dyn 'BEGIN { print staticin - dynin }' | bc);   
