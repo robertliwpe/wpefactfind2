@@ -47,10 +47,10 @@ printf "\r\nFACTFIND for $dediout pod-$cid\r\nThere are $count Installs on this 
 
 #Code Red - Do note share with Customer
 printf "Machine Type:"
-printf '\033[1m\033[31m' "$machine"
+printf '\033[1m\033[31m' $machine;
 printf "\r\n"
 printf "Do NOT share any metric "
-printf '\033[1m\033[31m' "colored RED"
+printf '\033[1m\033[31m' "colored RED";
 printf " with the customer."
 printf "\r\n\r\n"
 
