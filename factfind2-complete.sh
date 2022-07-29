@@ -6,6 +6,7 @@ printf '\e[1;34m%-6s\e[m' "WP Engine Factfind 2"
 printf "\r\n"
 echo "NOTE: This will ONLY work with WP Engine Production Pods and Servers."
 echo "This may also take a long time on very large filesystems and databases."
+echo "Also note that Cacheability scores of 0% or 100+% are likely inaccurate caused by non-use or atypical use of the install."
 echo "Enter Install Names using Space as a Separator:"
 
 read installsinit
@@ -117,7 +118,7 @@ for i in $installs;
 
                 # Correct for wierd results in cacheresult var
                 cacheresult=$(awk -v compin=$comp -v staticincache=$static 'BEGIN { print (compin / (staticincache+1))*100 }' | sed 's/^-.*/0/'); 
-                
+
                 if (( $(echo "$cacheresult > 100" | bc -l) ))
                     then
                         cacheresult=$(echo 100 | bc);
