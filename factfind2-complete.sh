@@ -123,7 +123,7 @@ for i in $installs;
                     then
                         cacheresult=$(echo 100 | bc);
                     else
-                        cacheresult=$(awk -v compin=$comp -v staticincache=$static 'BEGIN { print (compin / (staticincache))*100 }' | sed 's/^-.*/0/');
+                        cacheresult=$cacheresult;
                 fi;
 
                 echo "Cacheability (%): " $cacheresult;
