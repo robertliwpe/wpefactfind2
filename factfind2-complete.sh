@@ -23,7 +23,7 @@ all=$(zcat -f /var/log/apache2/*.access.log* | wc -l);
 totbsph=$(zcat -f /var/log/nginx/*.access.log.* | awk -F '|' '{sum += $9} END {print substr((sum/7)/3600,0,6)}'); 
 cid=$(hostname | cut -d'-' -f2); count=$(($(ls -l /nas/content/live/ | wc -l | bc)-1));
 az=$(wpephp server-option-get $cid | grep "availability_zone" | cut -d'>' -f2); 
-machine=$(wpephp server-option-get $cid | grep "machine_type" | cut -d'>' -f2); 
+machine=$(wpephp server-option-get $cid | grep "machine_type" | cut -d'>' -f2 | column -t); 
 plan=$(wpephp server-option-get $cid | grep "sales_offering" | cut -d'>' -f2); 
 
 dedi=$(wpephp server-option-get $cid | grep "single-tenant\|multi-tenant"); 
@@ -46,7 +46,7 @@ fi;
 printf "\r\nFACTFIND for $dediout pod-$cid\r\nThere are $count Installs on this pod\r\nAvailability Zone:$az\r\nPlan:$plan\r\nPlatform Type: $evlvclassic\r\n";
 
 #Code Red - Do note share with Customer
-printf "Machine Type:"
+printf "Machine Type: "
 printf '\e[1;37;41m%s\e[0m' "$machine"
 printf "\r\n"
 printf "Do NOT share any metric "
