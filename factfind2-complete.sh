@@ -5,6 +5,7 @@ printf "\r\n"
 printf '\e[1;34m%-6s\e[m' "WP Engine Factfind 2"
 printf "\r\n"
 echo "NOTE: This will ONLY work with WP Engine Production Pods and Servers."
+echo "This may also take a long time on very large filesystems and databases."
 echo "Enter Install Names using Space as a Separator:"
 
 read installsinit
