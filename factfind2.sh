@@ -43,10 +43,11 @@ fi;
 # Begin Function Whole of Pod
 printf "\r\nFACTFIND for $dediout pod-$cid\r\nThere are $count Installs on this pod\r\nAvailability Zone:$az\r\nPlan:$plan\r\nPlatform Type: $evlvclassic\r\n";
 
-#Code Red - Do note share with Customer
+# Code Red - Do note share with Customer
 printf "Machine Type: "
 printf '\e[1;37;41m%s\e[0m' "$machine";
 printf "\r\n"
+# Add more here...
 printf "Do NOT share any metric "
 printf '\e[1;37;41m%s\e[0m' "Color RED"
 printf " with the customer."
