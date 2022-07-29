@@ -67,7 +67,7 @@ for i in $installs;
                 fi;
 
                 echo "Size of Filesystem: " $diskprintout; 
-                dbsize=$(wp db size --size_format=MB --decimals=2 --skip-themes --skip-plugins --quiet | bc);
+                dbsize=$(wp db size --size_format=MB --decimals=2 --skip-themes --skip-plugins --quiet);
                 echo "Size of Database: " $dbsize "MB"; 
                 dbtotal=$(echo $dbtotal + $dbsize | bc);
                 errorcount=$(zcat -f /var/log/nginx/$i.access.log* | grep "|50[0-9]|" | wc -l); 
