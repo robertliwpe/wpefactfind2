@@ -117,13 +117,13 @@ for i in $installs;
                 comp=$(awk -v staticin=$static -v dynin=$dyn 'BEGIN { print staticin - dynin }' | bc);   
 
                 # Correct for wierd results in cacheresult var
-                cacheresult=$(awk -v compin=$comp -v staticincache=$static 'BEGIN { print (compin / (staticincache+1))*100 }' | sed 's/^-.*/0/'); 
+                cacheresult=$(awk -v compin=$comp -v staticincache=$static 'BEGIN { print ((compin+1) / (staticincache+1))*100 }' | sed 's/^-.*/0/'); 
 
                 if (( $(echo "$cacheresult > 100" | bc -l) ))
                     then
                         cacheresult=$(echo 100 | bc);
                     else
-                        cacheresult=$cacheresult;
+                        cacheresult=$(echo $cacheresult | bc);
                 fi;
 
                 echo "Cacheability (%): " $cacheresult;

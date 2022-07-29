@@ -77,7 +77,17 @@ for i in $installs;
                 static=$(zcat -f /var/log/nginx/$i.apachestyle.log* | grep -v "jpg\|jpeg\|png\|svg\|gif\|webp\|woff\|woff2\|ttf\|otf\|xml\|css\|ico\|\.js\|txt\|pdf\|mov\|mp4\|mp3\|aiff\|mpg\|mpeg\|ogg" | wc -l | bc); 
                 dyn=$(zcat -f /var/log/apache2/$i.access.log* | wc -l | bc); 
                 comp=$(awk -v staticin=$static -v dynin=$dyn 'BEGIN { print staticin - dynin }' | bc);   
-                cacheresult=$(awk -v compin=$comp -v staticincache=$static 'BEGIN { print (compin / (staticincache+1))*100 }' | sed 's/^-.*/0/'); 
+
+                # Correct for wierd results in cacheresult var
+                cacheresult=$(awk -v compin=$comp -v staticincache=$static 'BEGIN { print ((compin+1) / (staticincache+1))*100 }' | sed 's/^-.*/0/'); 
+
+                if (( $(echo "$cacheresult > 100" | bc -l) ))
+                    then
+                        cacheresult=$(echo 100 | bc);
+                    else
+                        cacheresult=$(echo $cacheresult | bc);
+                fi;
+                
                 echo "Cacheability (%): " $cacheresult;
                 echo "PHP-FPM / Apache Use: " $(awk "BEGIN {print ($dyn/$all)*100}" && echo "% ($dyn / $all hits)"); 
                 echo "Average Daily CPU Runtime Use 7-days (BSPH): " $(instbsph=$(zcat -f /var/log/nginx/$i.access.log.* | awk -F '|' '{sum += $9} END {print substr((sum/7)/3600,0,6)}'); 
