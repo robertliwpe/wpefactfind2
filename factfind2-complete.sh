@@ -43,7 +43,16 @@ if [[ $evlvfind =~ "evlv" ]];
 fi; 
 
 # Begin Function Whole of Pod
-printf "\r\nFACTFIND for $dediout pod-$cid\r\nThere are $count Installs on this pod\r\nAvailability Zone:$az\r\nMachine Type:$machine\r\nPlan:$plan\r\nPlatform Type: $evlvclassic\r\n\r\n";
+printf "\r\nFACTFIND for $dediout pod-$cid\r\nThere are $count Installs on this pod\r\nAvailability Zone:$az\r\nPlan:$plan\r\nPlatform Type: $evlvclassic\r\n";
+
+#Code Red - Do note share with Customer
+printf "Machine Type:"
+printf '\033[1m\033[31m' "$machine"
+printf "\r\n"
+printf "Do NOT share any metric "
+printf '\033[1m\033[31m' "colored RED"
+printf " with the customer."
+printf "\r\n\r\n"
 
 # Metrics Link
 if [[ $evlvfind =~ "evlv" ]];
