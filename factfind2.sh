@@ -79,12 +79,12 @@ for i in $installs;
                 fi;
 
                 echo "Size of Filesystem: " $diskprintout; 
-                dbsize=$(wp db size --size_format=MiB --decimals=2 --skip-themes --skip-plugins --skip-packages --quiet | tr -d '\r' | bc );
+                dbsize=$(dbsummary | grep "Total database size:" | cut -d':' -f4 | cut -d' ' -f2 | sed 's/\x1B[@A-Z\\\]^_]\|\x1B\[[0-9:;<=>?]*[-!"#$%&'"'"'()*+,.\/]*[][\\@A-Z^_`a-z{|}~]//g' | bc);
                 echo "Size of Database: " $dbsize "MB"; 
-                dbtotal=$(echo $dbtotal + $dbsize |  tr -d '\r' | bc);
+                dbtotal=$(echo $dbtotal + $dbsize | bc);
                 errorcount=$(zcat -f /var/log/nginx/$i.access.log* | grep "|50[0-9]|" | wc -l | bc); 
                 echo "50x Errors in All Logs: " $errorcount; 
-                errortotal=$(( $errortotal + $errorcount )); 
+                errortotal=$(echo $errortotal + $errorcount | bc); 
                 static=$(zcat -f /var/log/nginx/$i.apachestyle.log* | grep -v "jpg\|jpeg\|png\|svg\|gif\|webp\|woff\|woff2\|ttf\|otf\|xml\|css\|ico\|\.js\|txt\|pdf\|mov\|mp4\|mp3\|aiff\|mpg\|mpeg\|ogg" | wc -l | bc); 
                 dyn=$(zcat -f /var/log/apache2/$i.access.log* | wc -l | bc); 
                 comp=$(awk -v staticin=$static -v dynin=$dyn 'BEGIN { print staticin - dynin }' | bc);   
