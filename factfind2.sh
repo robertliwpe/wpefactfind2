@@ -7,6 +7,7 @@ printf "\r\n"
 echo "NOTE: This will ONLY work with WP Engine Production Pods and Servers."
 echo "This may also take a long time on very large filesystems and databases."
 echo "Also note that Cacheability scores of 0% or 100+% are likely inaccurate caused by non-use or atypical use of the install."
+printf "\r\n\r\n"
 echo "Enter Install Names using Space as a Separator:"
 
 read installsinit
