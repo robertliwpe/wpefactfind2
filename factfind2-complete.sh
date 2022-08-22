@@ -89,8 +89,7 @@ for i in $(ls -laSh /var/log/apache2/*.access.log /var/log/apache2/*.access.log.
 printf "\r\nInstalls with Highest 50x Errors\r\n(Last 48 Hrs)\r\n\r\n"; 
 
 # This is the get50x command from Redshell
-zgrep -E "\" 50[2,4] " /var/log/nginx/*.apachestyle.log /var/log/nginx/*.apachestyle.log.1 2>dev | sed -e "s_/var/log/nginx/__" -e "s_.apachestyle.log_ _" | awk '{ print $10,$1 }' | sort | uniq -c | sort -rn | head -20 | column -t;
-
+zgrep -E "\" 50[2,4] " /var/log/nginx/*.apachestyle.log /var/log/nginx/*.apachestyle.log.* 2>dev | sed -e "s_/var/log/nginx/__" -e "s_.apachestyle.log_ _" | awk '{ print $10,$1 }' | sort | uniq -c | sort -rn | head -20 | column -t;
 printf "\r\n=============================\r\n"; 
 
 # Per Install Factfind
