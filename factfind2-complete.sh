@@ -86,7 +86,7 @@ for i in $(ls -laSh /var/log/apache2/*.access.log /var/log/apache2/*.access.log.
         echo $offcount $installoffender; 
     done | column -t;
 
-printf "\r\nInstalls with Highest 50x Errors\r\n(Last 48 Hrs)\r\n\r\n"; 
+printf "\r\nInstalls with Highest 50x Errors\r\n\r\n"; 
 
 # This is the get50x command from Redshell
 zgrep -E "\" 50[2,4] " /var/log/nginx/*.apachestyle.log /var/log/nginx/*.apachestyle.log.* 2>dev | sed -e "s_/var/log/nginx/__" -e "s_.apachestyle.log_ _" | awk '{ print $10,$1 }' | sort | uniq -c | sort -rn | head -20 | column -t;
