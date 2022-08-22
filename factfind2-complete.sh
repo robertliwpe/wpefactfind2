@@ -26,6 +26,7 @@ cid=$(hostname | cut -d'-' -f2); count=$(($(ls -l /nas/content/live/ | wc -l | b
 az=$(wpephp server-option-get $cid | grep "availability_zone" | cut -d'>' -f2); 
 machine=$(wpephp server-option-get $cid | grep "machine_type" | cut -d'>' -f2 | column -t); 
 plan=$(wpephp server-option-get $cid | grep "sales_offering" | cut -d'>' -f2); 
+serverdisk=$(wpephp server-option-get $cid | grep "disk" | cut -d'>' -f2 | bc);
 
 dedi=$(wpephp server-option-get $cid | grep "single-tenant\|multi-tenant"); 
 if [[ $dedi =~ "single" ]]; 
@@ -44,7 +45,7 @@ if [[ $evlvfind =~ "evlv" ]];
 fi; 
 
 # Begin Function Whole of Pod
-printf "\r\nFACTFIND for $dediout pod-$cid\r\nThere are $count Installs on this pod\r\nAvailability Zone:$az\r\nPlan:$plan\r\nPlatform Type: $evlvclassic\r\n";
+printf "\r\nFACTFIND for $dediout pod-$cid\r\nThere are $count Installs on this pod\r\nAvailability Zone:$az\r\nPlan:$plan\r\nLocal Storage Volume: ${serverdisk} GB\r\nPlatform Type: $evlvclassic\r\n";
 
 # Code Red - Do note share with Customer
 printf "Machine Type: "
