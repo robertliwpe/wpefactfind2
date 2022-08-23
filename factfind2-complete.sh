@@ -119,7 +119,8 @@ for i in $installs;
                 fi;
 
                 echo "Size of Filesystem: " $diskprintout; 
-                dbsize=$(wp db query --skip-plugins --skip-themes "SELECT SUM(round(((data_length + index_length) / 1024 / 1024),2)) as 'Total_DB_Size' FROM information_schema.TABLES WHERE table_schema = 'wp_${i}' and TABLE_TYPE='BASE TABLE';" 2>/dev/null | tail -1 | bc);
+                dbsizeinit=$(wp db query --skip-plugins --skip-themes "SELECT SUM(round(((data_length + index_length) / 1024 / 1024),2)) as 'Total_DB_Size' FROM information_schema.TABLES WHERE table_schema = 'wp_${i}' and TABLE_TYPE='BASE TABLE';" 2>/dev/null | tail -1 | bc);
+                if [ -z "$dbsizeinit" ]; then dbsize=$(echo 0 | bc); else dbsize=$(echo $dbsizeinit | bc); fi
                 echo "Size of Database: " $dbsize "MB"; 
                 dbtotal=$(echo $dbtotal + $dbsize | bc);
                 errorcount=$(zcat -f /var/log/nginx/$i.access.log* | grep "|50[0-9]|" | wc -l | bc); 
