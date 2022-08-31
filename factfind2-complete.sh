@@ -21,7 +21,7 @@ errortotal=0;
 dbtotal=$(echo 0.0 | bc);
 initialdir=$(echo $PWD);
 all=$(zcat -f /var/log/apache2/*.access.log* | wc -l); 
-totbsph=$(zcat -f /var/log/nginx/*.access.log.* | awk -F '|' '{sum += $9} END {print substr((sum/7)/3600,0,6)}'); 
+totbsph=$(zcat -f /var/log/nginx/*.access.log /var/log/nginx/*.access.log.1* /var/log/nginx/*.access.log.2* /var/log/nginx/*.access.log.3* /var/log/nginx/*.access.log.4* /var/log/nginx/*.access.log.5* /var/log/nginx/*.access.log.6* | awk -F '|' '{sum += $9} END {print substr((sum/7)/3600,0,6)}'); 
 cid=$(hostname | cut -d'-' -f2); count=$(($(ls -l /nas/content/live/ | wc -l | bc)-1));
 az=$(wpephp server-option-get $cid | grep "availability_zone" | cut -d'>' -f2); 
 machine=$(wpephp server-option-get $cid | grep "machine_type" | cut -d'>' -f2 | column -t); 
