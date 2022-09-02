@@ -85,7 +85,7 @@ for i in $(ls -laSh /var/log/apache2/*.access.log /var/log/apache2/*.access.log.
         installoffender=$(echo $i | cut -d'.' -f1); 
         offcount=$(zcat -f /var/log/apache2/$installoffender.access.log* | wc -l); 
         echo $offcount $installoffender; 
-    done | column -t;
+    done | sort -rn | column -t;
 
 printf "\r\nInstalls with Highest 50x Errors\r\n\r\n"; 
 
