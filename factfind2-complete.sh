@@ -85,7 +85,7 @@ for i in $(ls -laSh /var/log/apache2/*.access.log /var/log/apache2/*.access.log.
         installoffender=$(echo $i | cut -d'.' -f1); 
         offcount=$(zcat -f /var/log/apache2/$installoffender.access.log* | wc -l); 
         echo $offcount $installoffender; 
-    done | sort -rn | column -t;
+    done | column -t;
 
 printf "\r\nInstalls with Highest 50x Errors\r\n\r\n"; 
 
@@ -120,7 +120,7 @@ for i in $installs;
 
                 echo "Size of Filesystem: " $diskprintout; 
                 
-                while [[ $dbsizeinit =~ ^[+-]?[0-9]+\.?[0-9]*$ ]]; do
+                while [[ $dbsizeinit => $"0.01 | bc" ]]; do
                     dbsizeinit=$(wp db query --skip-plugins --skip-themes "SELECT SUM(round(((data_length + index_length) / 1024 / 1024) , 2)) FROM information_schema.TABLES;" 2>/dev/null | tail -1 | bc);
                     sleep 1;
                 done
