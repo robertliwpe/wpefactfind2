@@ -123,8 +123,14 @@ for i in $installs;
                     dbsizeinit=0;
                     sleep 3;
                 done
-                #dbsizeinit=$(rettest=1; until [ ${rettest} -eq 0 ]; do wp db query --skip-plugins --skip-themes "SELECT SUM(round(((data_length + index_length) / 1024 / 1024) , 2)) FROM information_schema.TABLES;" 2>/dev/null | tail -1 | bc; RET=$?; sleep 1; done);
-                if [ -z "$dbsizeinit" ]; then dbsize=$(echo 0 | bc); else dbsize=$(echo ${dbsizeinit} | bc); fi
+
+                if [ -z "$dbsizeinit" ] 
+                    then 
+                        dbsize=$(echo 0 | bc); 
+                    else 
+                        dbsize=$(echo ${dbsizeinit} | bc); 
+                fi;
+                
                 echo "Size of Database: " ${dbsize} "MB"; 
                 dbtotal=$(echo ${dbtotal} + ${dbsize} | bc);
                 errorcount=$(zcat -f /var/log/nginx/$i.access.log* | grep "|50[0-9]|" | wc -l | bc); 
