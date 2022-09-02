@@ -119,9 +119,11 @@ for i in $installs;
                 fi;
 
                 echo "Size of Filesystem: " $diskprintout; 
-                until dbsizeinit=$(wp db query --skip-plugins --skip-themes "SELECT SUM(round(((data_length + index_length) / 1024 / 1024) , 2)) FROM information_schema.TABLES;" 2>/dev/null | tail -1 | bc); do
-                    dbsizeinit=0;
-                    sleep 3;
+                
+                dbsizeinit=0;
+                until [[ $dbsizeinit =~ ^[+-]?[0-9]+\.?[0-9]*$ ]]; do
+                    dbsizeinit=$(wp db query --skip-plugins --skip-themes "SELECT SUM(round(((data_length + index_length) / 1024 / 1024) , 2)) FROM information_schema.TABLES;" 2>/dev/null | tail -1 | bc);
+                    sleep 1;
                 done
 
                 if [ -z "$dbsizeinit" ] 
