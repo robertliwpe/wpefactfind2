@@ -82,17 +82,17 @@ for i in $installs;
 
                 echo "Size of Filesystem: " $diskprintout; 
                 
-                until dbsizeinit=$(wp db query --skip-plugins --skip-themes "SELECT SUM(round(((data_length + index_length) / 1024 / 1024) , 2)) FROM information_schema.TABLES;" 2>/dev/null | tail -1 | bc); do
-                    dbsizeinit=0;
-                    sleep 3;
-                done
-
-                if [ -z "$dbsizeinit" ] 
-                    then 
-                        dbsize=$(echo 0 | bc); 
-                    else 
-                        dbsize=$(echo ${dbsizeinit} | bc); 
-                fi;        
+                dbsizeinit=0;
+                while [[ $dbsizeinit == 0 ]]; do
+                    dbsizeinit=$(wp db query --skip-plugins --skip-themes "SELECT SUM(round(((data_length + index_length) / 1024 / 1024) , 2)) FROM information_schema.TABLES;" | tail -1 | bc 2>/dev/null);
+                    if [[ -z "$dbsizeinit" ]] 
+                        then
+                            dbsizeinit=0;
+                        else
+                            dbsize=$(echo ${dbsizeinit} | bc); 
+                    fi;
+                    sleep 1;
+                done        
                 
                 echo "Size of Database: " $dbsize "MB"; 
                 dbtotal=$(echo $dbtotal + $dbsize | bc);
