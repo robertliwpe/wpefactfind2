@@ -123,7 +123,7 @@ for i in $installs;
                 dbsizeinit=0;
                 while [[ $dbsizeinit == 0 ]]; do
                     dbsizeinit=$(wp db query --skip-plugins --skip-themes "SELECT SUM(round(((data_length + index_length) / 1024 / 1024) , 2)) FROM information_schema.TABLES;" 2>/dev/null | tail -1 | bc);
-                    if [ "$(echo $dbsizeinit | bc -l )" =~ ^[+-]?[0-9]+\.?[0-9]*$ ] 
+                    if [[ ${dbsizeinit} =~ ^[+-]?[0-9]+\.?[0-9]*$ ]] 
                         then
                             dbsizeinit=0;
                         else
