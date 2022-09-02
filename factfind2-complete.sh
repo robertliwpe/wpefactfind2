@@ -7,7 +7,7 @@ printf "\r\n"
 echo "NOTE: This will ONLY work with WP Engine Production Pods and Servers."
 echo "This may also take a long time on very large filesystems and databases."
 echo "Also note that Cacheability scores of 0% or 100+% are likely inaccurate caused by non-use or atypical use of the install."
-echo "Finally, if you see \"$ - bash: dev: Permission denied\" with any of the results, simply cancel the script and rerun it."
+echo "Finally, if you see \"$ - bash: dev: Permission denied\" or the database not showing up with any of the results, simply cancel the script and rerun it."
 printf "\r\n"
 echo "Enter Install Names using Space as a Separator:"
 
@@ -126,9 +126,9 @@ for i in $installs;
                     sleep 1;
                 done
                 #dbsizeinit=$(rettest=1; until [ ${rettest} -eq 0 ]; do wp db query --skip-plugins --skip-themes "SELECT SUM(round(((data_length + index_length) / 1024 / 1024) , 2)) FROM information_schema.TABLES;" 2>/dev/null | tail -1 | bc; RET=$?; sleep 1; done);
-                if [ -z "$dbsizeinit" ]; then dbsize=$(echo 0 | bc); else dbsize=$(echo $dbsizeinit | bc); fi
-                echo "Size of Database: " $dbsize "MB"; 
-                dbtotal=$(echo $dbtotal + $dbsize | bc);
+                if [ -z "$dbsizeinit" ]; then dbsize=$(echo 0 | bc); else dbsize=$(echo ${dbsizeinit} | bc); fi
+                echo "Size of Database: " ${dbsize} "MB"; 
+                dbtotal=$(echo ${dbtotal} + ${dbsize} | bc);
                 errorcount=$(zcat -f /var/log/nginx/$i.access.log* | grep "|50[0-9]|" | wc -l | bc); 
                 echo "50x Errors in All Logs: " $errorcount; 
                 errortotal=$(echo $errortotal + $errorcount | bc); 
