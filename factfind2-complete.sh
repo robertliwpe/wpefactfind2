@@ -120,8 +120,8 @@ for i in $installs;
 
                 echo "Size of Filesystem: " $diskprintout; 
                 
-                dbsizeinit=0;
                 until [[ $dbsizeinit =~ ^[+-]?[0-9]+\.?[0-9]*$ ]]; do
+                    dbsizeinit=0;
                     dbsizeinit=$(wp db query --skip-plugins --skip-themes "SELECT SUM(round(((data_length + index_length) / 1024 / 1024) , 2)) FROM information_schema.TABLES;" 2>/dev/null | tail -1 | bc);
                     sleep 1;
                 done
