@@ -12,8 +12,39 @@ echo "Enter Install Names using Space as a Separator:"
 
 read installsinit
 
+# Filtering out deleted installs
+installsfiltered=("$installsinit"); 
+IFS=$'\r\n' GLOBIGNORE='*' command eval 'deleted=$(wpeapi canceled-sites-on-cluster 101019 | jq -r '.[]')'; 
+deletedarr=(${deleted}); 
+installsout=$(echo ${installsfiltered[@]} ${deletedarr[@]} ${deletedarr[@]} | tr ' ' '\n' | sort | uniq -c | grep "1 " | column  -t | cut -d' ' -f3 | tr '\n' ' ');
+deletedinstalls=$(echo ${installsfiltered[@]} ${deletedarr[@]} | tr ' ' '\n' | sort | uniq -c | grep "2 " | column  -t | cut -d' ' -f3 | tr '\n' ' ');
+read -a installsoutarr <<< "$installsout";
+
+printf "\r\n";
+
+# printf "Account Installs:\r\n\r\n";
+
+# Multiple Account Install Check Loop
+# comparewaldo=0; 
+# for instoutarri in "${installsoutarr[@]}"; 
+#    do
+#        postcomparewaldo=$(waldo $instoutarri | grep -v "Thanks\|Total\|Build" | tail -n +3); 
+#        if [ "$postcomparewaldo" == "$comparewaldo" ]; 
+#            then
+#                comparewaldo=$postcomparewaldo; 
+#            else 
+#                echo $postcomparewaldo; 
+#                comparewaldo=$postcomparewaldo; 
+#        fi;
+#    done;
+# printf "\r\n\r\n";
+
+echo "Filtered Out (Deleted) Installs..."; 
+printf "\r\n"; 
+echo " ${deletedinstalls}";
+
 # Declare Global Vars
-installs="$installsinit"; 
+installs="$installsout"; 
 installdisk=0; 
 errortotal=0; 
 dbtotal=$(echo 0.0 | bc);
@@ -84,7 +115,14 @@ for i in $installs;
                 
                 dbsizeinit=0;
                 while [[ $dbsizeinit == 0 ]]; do
-                    dbsizeinit=$(wp db query --skip-plugins --skip-themes "SELECT SUM(round(((data_length + index_length) / 1024 / 1024) , 2)) FROM information_schema.TABLES;" | tail -1 | bc 2>/dev/null);
+                    
+                    if [[ $evlvfind =~ "evlv" ]]; 
+                        then 
+                            dbsizeinit=$(dbsizeinitout=$(wp db query --skip-plugins --skip-themes "SELECT SUM(round(((data_length + index_length) / 1024 / 1024) , 2)) FROM information_schema.TABLES;"); echo $dbsizeinitout | rev | cut -d' ' -f1 | rev | bc 2>/dev/null);
+                        else 
+                            dbsizeinit=$(echo $(wp db query --skip-plugins --skip-themes "SELECT SUM(round(((data_length + index_length) / 1024 / 1024) , 2)) FROM information_schema.TABLES;" | tail -2 | head -1 | column -s '|' -t | tr -d '\r') | bc 2>/dev/null); 
+                    fi; 
+                    
                     if [[ -z "$dbsizeinit" ]] 
                         then
                             dbsizeinit=0;
