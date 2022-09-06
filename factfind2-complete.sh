@@ -40,7 +40,7 @@ printf "\r\n";
 #    done;
 # printf "\r\n\r\n";
 
-echo "Filtered Out (Deleted) Installs:"; 
+echo "Filtered Out (Deleted) Installs..."; 
 printf "\r\n"; 
 echo " ${deletedinstalls}";
 
