@@ -23,14 +23,19 @@ read -a installsoutarr <<< "$installsout";
 
 printf "\r\n";
 
-printf "Account Installs:\r\n";
+printf "Active Install Pod Distribution:\r\n";
 waldoarr=$(for instoutarri in "${installsoutarr[@]}"; do postcomparewaldo=$(waldo $instoutarri | grep -v "401\|Thanks\|Total\|Build" | tail -n +3); echo $postcomparewaldo "|"; done); 
 echo ${waldoarr[@]} | tr '|' '\n' | sed 's/^ *//g' | sort | uniq;
 
 printf "\r\n"; 
 echo "Filtered Out (Deleted) Installs..."; 
 printf "\r\n"; 
-echo " ${deletedinstalls}";
+if [[ -z "$deletedinstalls" ]] 
+    then
+        echo " No deleted installs found in list!";
+    else
+        echo " ${deletedinstalls}"; 
+fi;
 
 # Declare Global Vars
 installs="$installsout"; 
@@ -106,10 +111,10 @@ for i in $(ls -laSh /var/log/apache2/*.access.log /var/log/apache2/*.access.log.
         echo $offcount $installoffender; 
     done | column -t;
 
-printf "\r\nInstalls with Highest 50x Errors\r\n\r\n"; 
+printf "\r\nInstalls with Highest 50x Errors\r\n(Last 7-days)\r\n\r\n"; 
 
 # This is the get50x command from Redshell
-zgrep -E "\" 50[2,4] " /var/log/nginx/*.apachestyle.log /var/log/nginx/*.apachestyle.log.* 2>dev | sed -e "s_/var/log/nginx/__" -e "s_.apachestyle.log_ _" | awk '{ print $10,$1 }' | sort | uniq -c | sort -rn | head -20 | column -t;
+zgrep -E "\" 50[2,4] " /var/log/nginx/*.apachestyle.log /var/log/nginx/*.apachestyle.log.1 /var/log/nginx/*.apachestyle.log.2 /var/log/nginx/*.apachestyle.log.3 /var/log/nginx/*.apachestyle.log.4 /var/log/nginx/*.apachestyle.log.5 /var/log/nginx/*.apachestyle.log.6 /var/log/nginx/*.apachestyle.log.7 2>dev | sed -e "s_/var/log/nginx/__" -e "s_.apachestyle.log_ _" | awk '{ print $10,$1 }' | sort | uniq -c | sort -rn | head -20 | column -t;
 printf "\r\n=============================\r\n"; 
 
 # Per Install Factfind
