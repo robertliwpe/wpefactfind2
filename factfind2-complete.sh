@@ -38,7 +38,7 @@ for instoutarri in "${installsoutarr[@]}";
         fi;
     done;
 
-printf "\r\n";
+printf "\r\n\r\n";
 echo "Filtered Out (Deleted) Installs:"; 
 printf "\r\n"; 
 echo " ${deletedinstalls}";
