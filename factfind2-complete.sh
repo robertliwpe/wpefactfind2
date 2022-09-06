@@ -21,8 +21,8 @@ installsout=$(echo ${installsfiltered[@]} ${deletedarr[@]} ${deletedarr[@]} | tr
 deletedinstalls=$(echo ${installsfiltered[@]} ${deletedarr[@]} | tr ' ' '\n' | sort | uniq -c | grep "2 " | column  -t | cut -d' ' -f3 | tr '\n' ' ');
 read -a installsoutarr <<< "$installsout";
 
-printf "Account Installs:" && waldo ${installsoutarr[0]} | grep -v "Thanks\|Total\|Build" | tail -n +3; 
-echo "Deleted Installs:"; 
+printf "\r\nAccount Installs:" && waldo ${installsoutarr[0]} | grep -v "Thanks\|Total\|Build" | tail -n +3; 
+echo "Filtered Out (Deleted) Installs:"; 
 printf "\r\n"; 
 echo " ${deletedinstalls}";
 printf "\r\n"; 
