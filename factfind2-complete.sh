@@ -23,23 +23,11 @@ read -a installsoutarr <<< "$installsout";
 
 printf "\r\n";
 
-# printf "Account Installs:\r\n\r\n";
+printf "Account Installs:\r\n";
+waldoarr=$(for instoutarri in "${installsoutarr[@]}"; do postcomparewaldo=$(waldo $instoutarri | grep -v "401\|Thanks\|Total\|Build" | tail -n +3); echo $postcomparewaldo "|"; done); 
+echo ${waldoarr[@]} | tr '|' '\n' | sed 's/^ *//g' | sort | uniq;
 
-# Multiple Account Install Check Loop
-# comparewaldo=0; 
-# for instoutarri in "${installsoutarr[@]}"; 
-#    do
-#        postcomparewaldo=$(waldo $instoutarri | grep -v "Thanks\|Total\|Build" | tail -n +3); 
-#        if [ "$postcomparewaldo" == "$comparewaldo" ]; 
-#            then
-#                comparewaldo=$postcomparewaldo; 
-#            else 
-#                echo $postcomparewaldo; 
-#                comparewaldo=$postcomparewaldo; 
-#        fi;
-#    done;
-# printf "\r\n\r\n";
-
+printf "\r\n"; 
 echo "Filtered Out (Deleted) Installs..."; 
 printf "\r\n"; 
 echo " ${deletedinstalls}";
