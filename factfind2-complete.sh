@@ -13,8 +13,22 @@ echo "Enter Install Names using Space as a Separator:"
 
 read installsinit
 
+# Filtering out deleted installs
+installsfiltered=("$installsinit"); 
+IFS=$'\r\n' GLOBIGNORE='*' command eval 'deleted=$(wpeapi canceled-sites-on-cluster 101019 | jq -r '.[]')'; 
+deletedarr=(${deleted}); 
+installsout=$(echo ${installsfiltered[@]} ${deletedarr[@]} ${deletedarr[@]} | tr ' ' '\n' | sort | uniq -c | grep "1 " | column  -t | cut -d' ' -f3 | tr '\n' ' ');
+deletedinstalls=$(echo ${installsfiltered[@]} ${deletedarr[@]} | tr ' ' '\n' | sort | uniq -c | grep "2 " | column  -t | cut -d' ' -f3 | tr '\n' ' ');
+read -a installsoutarr <<< "$installsout";
+
+printf "Account Installs:" && waldo ${installsoutarr[0]} | grep -v "Thanks\|Total\|Build" | tail -n +3; 
+echo "Deleted Installs:"; 
+printf "\r\n"; 
+echo " ${deletedinstalls}";
+printf "\r\n"; 
+
 # Declare Global Vars
-installs="$installsinit"; 
+installs="$installsout"; 
 installcount=0;
 installdisk=0; 
 errortotal=0; 
