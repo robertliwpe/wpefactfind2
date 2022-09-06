@@ -153,7 +153,14 @@ for i in $installs;
                 
                 dbsizeinit=0;
                 while [[ $dbsizeinit == 0 ]]; do
-                    dbsizeinit=$(echo $(wp db query --skip-plugins --skip-themes "SELECT SUM(round(((data_length + index_length) / 1024 / 1024) , 2)) FROM information_schema.TABLES;" | tail -2 | head -1 | column -s '|' -t | tr -d '\r') | bc 2>/dev/null);
+                    
+                    if [[ $evlvfind =~ "evlv" ]]; 
+                        then 
+                            dbsizeinit=$(dbsizeinitout=$(wp db query --skip-plugins --skip-themes "SELECT SUM(round(((data_length + index_length) / 1024 / 1024) , 2)) FROM information_schema.TABLES;"); echo $dbsizeinitout | rev | cut -d' ' -f1 | rev | bc 2>/dev/null);
+                        else 
+                            dbsizeinit=$(echo $(wp db query --skip-plugins --skip-themes "SELECT SUM(round(((data_length + index_length) / 1024 / 1024) , 2)) FROM information_schema.TABLES;" | tail -2 | head -1 | column -s '|' -t | tr -d '\r') | bc 2>/dev/null); 
+                    fi; 
+                    
                     if [[ -z "$dbsizeinit" ]] 
                         then
                             dbsizeinit=0;
