@@ -147,8 +147,7 @@ else
                     
                     dbsizeinit=0;
                     while [[ $dbsizeinit == 0 ]]; do
-                        dbsizeinit=$(echo $(wp db query --skip-plugins --skip-themes "SELECT SUM(round(((data_length + index_length) / 1024 / 1024) , 2)) FROM information_schema.TABLES;" | tail -2 | head -1 | column -s '|' -t | tr -d '\r') | bc 2>/dev/null);
-                        if [[ -z "$dbsizeinit" ]] 
+                        dbsizeinit=$(echo $(wp db query --skip-plugins --skip-themes "SELECT SUM(round(((data_length + index_length) / 1024 / 1024) , 2)) FROM information_schema.TABLES;" | tail -2 | head -1 | column -s '|' -t | tr -d '\r') | bc 2>/dev/null);                        if [[ -z "$dbsizeinit" ]] 
                             then
                                 dbsizeinit=0;
                             else
