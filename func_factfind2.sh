@@ -25,8 +25,9 @@ else
     read installsinit
     
     # Filtering out deleted installs
+    cid=$(hostname | cut -d'-' -f2); 
     installsfiltered=("$installsinit"); 
-    IFS=$'\r\n' GLOBIGNORE='*' command eval 'deleted=$(wpeapi canceled-sites-on-cluster 101019 | jq -r '.[]')'; 
+    IFS=$'\r\n' GLOBIGNORE='*' command eval 'deleted=$(wpeapi canceled-sites-on-cluster ${cid} | jq -r '.[]')'; 
     deletedarr=(${deleted}); 
     installsout=$(echo ${installsfiltered[@]} ${deletedarr[@]} ${deletedarr[@]} | tr ' ' '\n' | sort | uniq -c | grep "1 " | column  -t | cut -d' ' -f3 | tr '\n' ' ');
     deletedinstalls=$(echo ${installsfiltered[@]} ${deletedarr[@]} | tr ' ' '\n' | sort | uniq -c | grep "2 " | column  -t | cut -d' ' -f3 | tr '\n' ' ');
@@ -59,7 +60,7 @@ else
     initialdir=$(echo $PWD);
     all=$(zcat -f /var/log/apache2/*.access.log* | wc -l); 
     totbsph=$(zcat -f /var/log/nginx/*.access.log /var/log/nginx/*.access.log.1* /var/log/nginx/*.access.log.2* /var/log/nginx/*.access.log.3* /var/log/nginx/*.access.log.4* /var/log/nginx/*.access.log.5* /var/log/nginx/*.access.log.6* | awk -F '|' '{sum += $9} END {print substr((sum/7)/3600,0,6)}'); 
-    cid=$(hostname | cut -d'-' -f2); count=$(($(ls -l /nas/content/live/ | wc -l | bc)-1));
+    count=$(($(ls -l /nas/content/live/ | wc -l | bc)-1));
     az=$(wpephp server-option-get $cid | grep "availability_zone" | cut -d'>' -f2); 
     machine=$(wpephp server-option-get $cid | grep "machine_type" | cut -d'>' -f2 | column -t); 
     plan=$(wpephp server-option-get $cid | grep "sales_offering" | cut -d'>' -f2); 
