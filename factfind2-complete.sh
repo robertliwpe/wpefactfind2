@@ -26,7 +26,7 @@ printf "\r\n";
 
 printf "Active Account Installs Pod Distribution:\r\n";
 waldoarr=$(for instoutarri in "${installsoutarr[@]}"; do postcomparewaldo=$(waldo $instoutarri | grep -v "401\|Thanks\|Total\|Build" | tail -n +3); echo $postcomparewaldo "|"; done); 
-IFS='|'; echo ${waldoarr[@]} | tr '|' '\n' | sed 's/^ *//g' | sort | uniq;
+echo ${waldoarr[@]} | tr '|' '\n' | sed 's/^ *//g' | sort | uniq;
 
 printf "\r\n"; 
 echo "Filtered Out (Deleted) Installs..."; 
