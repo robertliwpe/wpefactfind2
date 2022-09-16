@@ -128,7 +128,7 @@ for i in $installs;
                 
                 echo "Size of Database: " $dbsize "MB"; 
                 dbtotal=$(echo $dbtotal + $dbsize | bc);
-                errorcount=$(zcat -f /var/log/nginx/$i.access.log* | cut -d'|' -f5 | grep "|50[0-9]|" | wc -l | bc); 
+                errorcount=$(zcat -f /var/log/nginx/$i.apachestyle.log* | grep "\"\ 50[0-9]\ " | wc -l | bc); 
                 echo "50x Errors in All Logs: " $errorcount; 
                 errortotal=$(echo $errortotal + $errorcount | bc); 
                 static=$(zcat -f /var/log/nginx/$i.apachestyle.log* | grep -v "jpg\|jpeg\|png\|svg\|gif\|webp\|woff\|woff2\|ttf\|otf\|xml\|css\|ico\|\.js\|txt\|pdf\|mov\|mp4\|mp3\|aiff\|mpg\|mpeg\|ogg" | wc -l | bc); 
