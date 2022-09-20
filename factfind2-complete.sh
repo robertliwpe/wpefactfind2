@@ -163,7 +163,7 @@ for i in $installs;
                     fi;                    
                     if [[ -z "$dbsizeinit" ]] 
                         then
-                            dbsizeinit=0;
+                            dbsizeinit=$(echo 0.0 | bc);
                         else
                             dbsize=$(echo ${dbsizeinit} | bc); 
                     fi;
