@@ -145,21 +145,26 @@ for i in $installs;
 
                 echo "Size of Filesystem: " $diskprintout; 
                 
+                dbloopinc=0;
                 dbsizeinit=0;
                 while [[ $dbsizeinit == 0 ]]; do
-                    
                     if [[ $evlvfind =~ "evlv" ]]; 
                         then 
                             dbsizeinit=$(dbsizeinitout=$(wp db query --skip-plugins --skip-themes "SELECT SUM(round(((data_length + index_length) / 1024 / 1024) , 2)) FROM information_schema.TABLES;"); echo $dbsizeinitout | rev | cut -d' ' -f1 | rev | bc 2>/dev/null);
                         else 
                             dbsizeinit=$(echo $(wp db query --skip-plugins --skip-themes "SELECT SUM(round(((data_length + index_length) / 1024 / 1024) , 2)) FROM information_schema.TABLES;" | tail -2 | head -1 | column -s '|' -t | tr -d '\r') | bc 2>/dev/null); 
-                    fi; 
-                    
+                    fi;          
                     if [[ -z "$dbsizeinit" ]] 
                         then
                             dbsizeinit=0;
                         else
                             dbsize=$(echo ${dbsizeinit} | bc); 
+                    fi;
+                    ((dbloopinc++))
+                    if [[ "$dbloopinc" == '5' ]]; 
+                        then
+                            echo "Database could not be read..."
+                            break
                     fi;
                     sleep 1;
                 done
