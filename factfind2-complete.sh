@@ -154,16 +154,15 @@ for i in $installs;
                         else 
                             dbsizeinit=$(echo $(wp db query --skip-plugins --skip-themes "SELECT SUM(round(((data_length + index_length) / 1024 / 1024) , 2)) FROM information_schema.TABLES;" | tail -2 | head -1 | column -s '|' -t | tr -d '\r') | bc 2>/dev/null); 
                     fi;          
-                    ((dbloopinc++))
-                    if [[ "$dbloopinc" == '3' ]]; 
+                    ((dbloopinc++))                 
+                    if  [[ "$dbloopinc" == '3' ]]
                         then
                             dbsize=0;
                             echo "Database could not be read...";
                             break
-                    fi;                    
-                    if [[ -z "$dbsizeinit" ]] 
-                        then
-                            dbsizeinit=0;
+                        elif [[ -z "$dbsizeinit" ]]
+                            then
+                                dbsizeinit=0;
                         else
                             dbsize=$(echo ${dbsizeinit} | bc); 
                     fi;
