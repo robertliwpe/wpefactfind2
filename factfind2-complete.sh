@@ -166,7 +166,7 @@ for i in $installs;
                         else
                             dbsize=$(echo ${dbsizeinit} | bc); 
                     fi;
-                    sleep 1;
+                    # sleep 1;
                 done    
                 
                 echo "Size of Database: " ${dbsize} "MB"; 
