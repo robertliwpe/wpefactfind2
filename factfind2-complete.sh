@@ -163,8 +163,8 @@ for i in $installs;
                     ((dbloopinc++))
                     if [[ "$dbloopinc" == '3' ]]; 
                         then
-                            echo "Database could not be read..."
-                            dbsizeinit=0
+                            echo "Database could not be read...";
+                            dbsizeinit=0;
                             break
                     fi;
                     sleep 1;
